@@ -1,73 +1,75 @@
 # ClimateChange_SaphiraRivera
-Predicting High-Emission Country-Years from Global Energy and Economic Data
+
+The model successfully predicts HECYs even though it was trained on a dataset that excludes these years.The model can predict HECYs even though it was trained on a dataset without these years.
+
 1. One-Sentence Summary
-I built a machine learning classifier that predicts whether a country in a given year is a "High-Emitter" using economic, demographic, and non-CO2 energy metrics, and verified whether the model performs fairly across low-, middle-, and high-income nations.
+Created a machine learning classifer that classifies a country in a particular year as a "High-Emitter" based on economic, demographic and non-CO2 energy indicators and tested whether the model is fairly applied across the three income groups.
 
 2. The Problem
-Climate policy decisions, global climate financing, and trade tariffs often rely on identifying countries with disproportionately high greenhouse gas output. However, evaluating emissions without context can unfairly penalize developing nations or overlook energy-inefficient practices. Predicting high-emission status strictly from structural indicators—like population, income, and overall energy consumption—helps highlight which economic and energy profiles naturally drive heavy carbon footprints, while surfacing structural disparities in global reporting.
+The distinction between countries' disproportionate GHG emissions is crucial to climate policy decision-making, global climate finance, and tariff policies. But a blanket ranking of emissions has the potential to unfairly punish developing countries or ignore energy inefficient practices. Striking high-emission status exclusively with structural data, such as population, income and energy use, will also help to identify the economic and energy profiles that tend naturally to be high emitting, and to identify structural disparities in the reporting of carbon footprints.
 
 3. The Data
-I used the Our World in Data (OWID) CO2 and Greenhouse Gas Emissions dataset, covering historical country emissions and socioeconomic indicators.
+I used the Our World in Data (OWID) CO2 and Greenhouse Gas Emissions dataset, which includes data on country emissions of CO2 and the Greenhouse Gases (GHGs) for recent history and socioeconomic indicators.
 
-Data Cleaning & Filtering: I removed regional aggregate rows (such as "World" or "Asia" which lacked iso_code values) to prevent double-counting emissions. I dropped rows with missing core CO2 figures and filled missing breakdown source metrics with zero where appropriate. The cleaned dataset contained 13,555 country-year observations across 19 features.
+Data Cleaning & Filtering: I excluded regional aggregate rows (e.g. "World" or "Asia" without iso_code values) from the dataset so that emissions are not counted twice. Rows containing missing core CO2 data were dropped and missing breakdown source data metrics were filled with zeros if applicable. 13,555 country-year observations were included in the cleaned dataset, with 19 features.
 
-EDA Finding: Exploratory Data Analysis revealed an extreme right-skew in per-person CO2 emissions—a small handful of fossil-fuel-dependent and wealthy nations produced emissions per person far exceeding the global median.
+EDA Finding: An exploratory analysis of CO2 emissions per person showed that there was extreme right-skew, with a few fossil-fuel intensive and rich countries emitting much more CO2 per capita than the average.
 
 4. What I Did
-Target Definition: I created a binary target variable, high_emitter, where a country-year was labeled 1 if its co2_per_capita exceeded the global median across all recorded years, and 0 otherwise.
+I defined a binary target variable high_emitter as a country-year that had co2_per_capita higher than the global median for all years.
 
-Feature Selection & Leakage Prevention: To avoid data leakage, I explicitly excluded direct CO2 components (coal_co2, oil_co2, gas_co2, total_ghg). Instead, I selected independent predictors: gdp_per_capita, population, primary_energy_consumption, energy_per_capita, methane, nitrous_oxide, and year.
+Data Leakage Prevention: Direct components of CO2 (coal_co2, oil_co2, gas_co2 and total_ghg) were explicitly excluded to prevent data leakage. I instead chose to use independent predictors: gdp_per_capita, population, primary_energy_consumption, energy_per_capita, methane, nitrous_oxide, and year.
 
-Modeling: After splitting data into 80% training and 20% testing sets (stratified by target class) and standardizing numeric features, I established a Dummy Classifier baseline (always predicting the majority class). I then trained and tuned four main machine learning algorithms:
+Modeling: I divided my data into an 80/20 train/test split (stratified by the target class), and then scaled the numeric features and created a Dummy Classifier baseline (always predicting the most common class). I then trained and tuned four main machine learning algorithms:
 
 Logistic Regression (mathematical linear boundary)
 
-k-Nearest Neighbors (majority voting among similar data points)
+Any similarity based voting, such as k-Nearest Neighbors (kNN) (majority voting among similar data points).
 
-Decision Tree (flowchart of sequential rule splits)
+This will be a flow chart of sequential rule splits, called Decision Tree.
 
 Random Forest (ensemble of voting decision trees)
 
-Evaluation: Models were evaluated on unseen test data using Accuracy, Precision, Recall, and F1 Score.
+Evaluation: Accuracy, Precision, Recall and F1 Score were used to evaluate models on unseen test data.
 
 5. What I Found
-Main Result: The Random Forest model achieved the highest performance, reaching an overall F1 Score of ~0.96 (and accuracy over 96%), significantly outperforming the baseline dummy model accuracy floor of 50.0%.
+Main Result: The best model was the Random Forest model which performed with an overall F1 Score of ~0.96 (and an accuracy of more than 96%), well above the minimum accuracy of the dummy model of 50.0%.
 
-Key Visualizations: * The Scatter Plot of GDP per Capita vs. CO2 per Capita (log scale) illustrates the strong non-linear relationship between wealth and per-person emissions.
+The Scatter Plot of GDP per Capita vs. CO2 per Capita (log scale) shows that there is a strong non-linear relationship between wealth and per-person emissions.
 
-The Confusion Matrix & Feature Importance Chart in the notebook shows that energy_per_capita and gdp_per_capita are the strongest drivers in identifying high-emitting country-years.
+The energy_per_capita and gdp_per_capita variables are the greatest contributors to the classification of high emitting country-years, as indicated by the Confusion Matrix & Feature Importance Chart in the notebook.
 
 6. Fairness Check
-I evaluated model fairness by splitting test predictions across three income tiers (Low income tier, Middle income tier, High income tier) using gdp_per_capita tertiles.
+I used gdp_per_capita tertiles to evaluate the fairness of the models by splitting predictions with respect to the three income tiers (Low income tier, Middle income tier, High income tier).
 
-Findings: The model demonstrated higher predictive accuracy on High-Income and Low-Income nations, but exhibited a slightly higher rate of false positives/negatives in the Middle-Income tier.
+Results: The model shows higher predictive performance for the High-Income and Low-Income countries, and a slightly higher level of false positives/false negatives in Middle-Income countries.
 
-Explanation: Middle-income nations are often undergoing rapid industrialization or economic transition, making their energy-to-emissions profiles much more volatile compared to established low- or high-income economies.
+Explanation: Middle-income countries tend to have much more volatile energy to emissions profiles, as they often rapidly industrialize or make economic transitions as opposed to the established low or high income countries.
 
-7. Conclusion of All Main Findings
-Through this project, I uncovered several key insights regarding global carbon emissions and predictive modeling:
+In October 2012, the report was finalized.The report was completed in October 2012.
+In the course of this project, I gained some important insights into global carbon emissions and predictive modelling:
 
-Strong Predictability from Structural Metrics: Non-CO2 metrics—specifically per-capita energy consumption and per-capita GDP—are exceptionally strong predictors of a country's emission classification. I demonstrated that complex models like Random Forest can classify high-emitting country-years with ~96% accuracy without needing direct carbon emission inputs.
+In addition to the per-capita CO2, there are other per-capita metrics which predict a country's emission classification very strongly: per-capita energy use and per-capita GDP. I showed that complex models, such as RF, can classify country-years of high emissions with ~96% accuracy without direct carbon emission data.
 
-Wealth and Emissions Non-Linearity: While GDP per capita strongly correlates with higher emissions, the relationship flattens at upper wealth levels, challenging the simple assumption that economic growth strictly dictates per-capita emissions at higher development tiers.
+Wealth and Emissions Non-Linearity: There is a strong correlation between GDP per capita and emissions, but the relationship levels out when it gets to higher levels of development, which makes the implicit assumption that economic growth directly determines per-capita emissions at higher development stages less obvious.
 
-Middle-Income Volatility: The fairness evaluation revealed that model uncertainty is concentrated in middle-income economies undergoing industrial transitions. As a result, predictive climate models must handle transitional economies carefully to prevent unjust policy or financial penalties.
+Model uncertainty is found in middle income economies in transition to industry, as found in an evaluation of the fairness, Middle Income Volatility. This necessitates that predictive climate models need to be addressed with care in the context of transitional economies to avoid unfair policy or financial sanctions.
 
 8. Limits & What's Next
-Limitations: The derived target uses a single historical global median, which treats a 1950 country-year under the same cutoff as a 2020 country-year. Additionally, filling missing emission sources with zero for small nations may undercount historical emissions in developing regions.
+Limitations: What is derived from the target is a single historical global median, so that a country-year in 1950 is equal to a country-year in 2020. Further, assuming zero emissions for missing emission sources in small countries could underestimate emissions data in the past for developing countries.
 
-What Didn't Work: Simple linear models like Logistic Regression struggled to capture non-linear energy consumption thresholds without extensive polynomial feature engineering.
+Simple linear models such as Logistic Regression were not very successful in modelling the non-linear consumption thresholds of energy without polynomial feature engineering.
 
-What's Next: With another week, I would implement dynamic yearly median thresholds, incorporate renewable energy percentage as a feature, and test regional subgroup fairness beyond GDP tiers.
+What's Next: After yet another week, I would add the percentage of renewable energy as a feature and try some regional subgroup fairness outside the GDP level boundaries.
 
-Usage Warning: This model predicts historical statistical classification based on macro data; it should not be used as an absolute metric to impose unilateral trade penalties or climate liability on individual nations.
+Note: This model is a statistical classification prediction for historical data, and should not be taken as a measure of unilateral trade penalties or climate liability for any nation.
 
 9. How to Run It
-Notebook Link: Open and run Saphira_Rivera_ClimateChange (2).ipynb in Google Colab or Jupyter Notebook.
+To open and run the Notebook Link: Saphira_Rivera_ClimateChange (2).ipynb in Google Colab or Jupyter Notebook.
 
-Prerequisites: Python 3.x with pandas, numpy, matplotlib, seaborn, and scikit-learn installed.
+Requirements: Pandas, numpy, matplotlib, seaborn and scikit-learn are required along with Python 3.x.
 
-Execution Time: ~1 to 2 minutes start-to-finish (data is fetched directly via GitHub URL).
+Start to finish, it takes around 1 to 2 minutes. (Data is retrieved directly from the GitHub URL).
 
 10. Team & Roles
-Saphira Rivera — Lead Data Investigator & ML Developer: Responsible for the data cleaning pipeline, feature engineering, model training/tuning, fairness check evaluation, and notebook compilation.
+Saphira Rivera — Lead Data Investigator & ML Developer: Lead on the Data Cleaning pipeline, Feature Engineering, Model Training/Tuning, Fairness Check Evaluation, and Notebook Compilation.
