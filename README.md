@@ -1,7 +1,5 @@
 # ClimateChange_SaphiraRivera
 
-The model successfully predicts HECYs even though it was trained on a dataset that excludes these years.The model can predict HECYs even though it was trained on a dataset without these years.
-
 1. One-Sentence Summary
 Created a machine learning classifer that classifies a country in a particular year as a "High-Emitter" based on economic, demographic and non-CO2 energy indicators and tested whether the model is fairly applied across the three income groups.
 
